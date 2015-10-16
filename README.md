@@ -52,7 +52,7 @@ function myCustomReplace(html, data) {
 
 <script src="repeater.js"></script>
 
-<div id="list1">
+<div id="container">
     <div class="listitem">
         <a href="{url}">{title}</a>
     </div>       
@@ -64,7 +64,7 @@ function myCustomReplace(html, data) {
             { "title": "Science page", "url": "/science.html" }
         ];
             
-        var x = new Repeater("list1", data);
+        var x = new Repeater("container", data);
         x.render();
 </script>
 ```
