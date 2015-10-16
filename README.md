@@ -46,7 +46,7 @@ function myCustomReplace(html, data) {
 ```
 
 ---
-**EXAMPLE:**
+**EXAMPLE CODE:**
 
 ```
 
@@ -69,7 +69,7 @@ function myCustomReplace(html, data) {
 </script>
 ```
 
-**OUTPUT:**
+**EXAMPLE OUTPUT:**
 ```
 <div id="container">
     <div class="listitem">
