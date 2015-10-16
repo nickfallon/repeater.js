@@ -28,7 +28,7 @@ x.render();
 **EXTENDED USAGE:**
 
 ```
-// The render() method can accept an *optional* input function (optionalReplaceFunction)
+// The render() method can accept an optional input function (optionalReplaceFunction)
 // as a parameter, which expects 2 arguments:
 // - the html for a single record
 // - data object for a single record
