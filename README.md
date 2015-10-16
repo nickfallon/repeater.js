@@ -3,7 +3,7 @@
 ===
 
 A fast, lightweight pure javascript Repeater. You supply a container DIV Id containing your template HTML, and an array of objects.
-The Repeater will repeat the template HTML within the container for each object in the array and replace any {fields} surrounded by curly braces with the data found in the current object.
+The Repeater will repeat the template HTML within the container for each object in the array and replace any {fields} surrounded by curly braces with the data found in the current object, if it can match the field name with a property.
 
 If you want to do something more complex, you can pass an (optional) function as an argument to the render method (see below in Extended Usage).
 
