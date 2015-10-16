@@ -46,7 +46,7 @@ function myCustomReplace(html, data) {
 ```
 
 ---
-**Example:**
+**EXAMPLE:**
 
 ```
 
