@@ -43,6 +43,9 @@ function myCustomReplace(html, data) {
 **Example:**
 
 ```
+
+<script src="repeater.js"></script>
+
 <div id="list1">
     <div class="listitem">
         <a href="{url}">{title}</a>
