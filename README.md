@@ -1,6 +1,7 @@
 
 #repeater.js
 ===
+nick.fallon@centralfax.co.uk
 
 A fast, lightweight pure javascript Repeater. Give it a DIV ID containing your template HTML, and an array of objects.
 The Repeater will repeat your template HTML once for each object in the array and replace any {fields} surrounded by curly braces with the data found in the current object.
