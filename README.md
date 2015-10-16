@@ -75,7 +75,6 @@ function myCustomReplace(html, data) {
     <div class="listitem">
         <a href="/history.html">History page</a>
     </div>       
-
     <div class="listitem">
         <a href="/science.html">Science page</a>
     </div>       
