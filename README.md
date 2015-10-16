@@ -2,7 +2,7 @@
 #repeater.js
 ===
 
-A fast, lightweight JS repeater. Give it a DIV ID containing your template HTML, and an array of objects.
+A fast, lightweight pure javascript Repeater. Give it a DIV ID containing your template HTML, and an array of objects.
 The Repeater will repeat your template HTML once for each object in the array and replace any {fields} surrounded by curly braces with the data found in the current object.
 
 If you want to do something more complex, you can pass an (optional) function as an argument to the render method (see below in Extended Usage).
