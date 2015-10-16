@@ -69,3 +69,16 @@ function myCustomReplace(html, data) {
 </script>
 ```
 
+Output:
+```
+<div id="list1">
+    <div class="listitem">
+        <a href="/history.html">History page</a>
+    </div>       
+
+    <div class="listitem">
+        <a href="/science.html">Science page</a>
+    </div>       
+</div>
+```
+
