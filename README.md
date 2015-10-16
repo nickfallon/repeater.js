@@ -28,16 +28,21 @@ x.render();
 **EXTENDED USAGE:**
 
 ```
-// The render() method can accept an optional input function (optionalReplaceFunction)
-// as a parameter, which expects 2 arguments:
-// - the html for a single record
-// - data object for a single record
+// The render() method can accept an optional function as a parameter, 
+// which will be called with 2 arguments: optionalReplaceFunction(html, data)
+// html - the html for a single record
+// data - data object for a single record
 
 // The optionalReplaceFunction must return the modified HTML source as output. 
+
+// This example shows how to provide your own optionalReplaceFunction().
 
 function myCustomReplace(html, data) {
     for (prop in record) {
         html = html.replace("{" + prop + "}", record[prop]);
+        
+        //do something custom here!
+        
     }
     return html;
 }
