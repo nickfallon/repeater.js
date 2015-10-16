@@ -1,7 +1,6 @@
 
 #repeater.js
 ===
-nick.fallon@centralfax.co.uk
 
 A fast, lightweight pure javascript Repeater. Give it a DIV ID containing your template HTML, and an array of objects.
 The Repeater will repeat your template HTML once for each object in the array and replace any {fields} surrounded by curly braces with the data found in the current object.
@@ -9,6 +8,8 @@ The Repeater will repeat your template HTML once for each object in the array an
 If you want to do something more complex, you can pass an (optional) function as an argument to the render method (see below in Extended Usage).
 
 This code is approximately 4 times faster than Angular **ng-repeat**. 
+
+Contact the author: nick.fallon@centralfax.co.uk
 
 ---
 **SIMPLE USAGE:**
