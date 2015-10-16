@@ -69,7 +69,7 @@ function myCustomReplace(html, data) {
 </script>
 ```
 
-Output:
+**OUTPUT:**
 ```
 <div id="list1">
     <div class="listitem">
