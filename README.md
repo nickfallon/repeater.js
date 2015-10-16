@@ -20,7 +20,6 @@ var x = new Repeater(id, array);
 x.render();
 ```
 
-
 ---
 **EXTENDED USAGE:**
 
@@ -39,3 +38,25 @@ function myCustomReplace(html, data) {
  var x = new Repeater(id, array);
  x.render(myCustomReplace);
 ```
+
+---
+**Example:**
+
+```
+<div id="list1">
+    <div class="listitem">
+        <a href="{url}">{title}</a>
+    </div>       
+</div>
+
+<script>
+        var data = [
+            { "title": "History page", "url": "/history.html" },
+            { "title": "Science page", "url": "/science.html" }
+        ];
+            
+        var x = new Repeater("list1", data);
+        x.render();
+</script>
+```
+
