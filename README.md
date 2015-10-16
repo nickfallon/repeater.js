@@ -1,6 +1,7 @@
 
 #repeater.js
 
+---
 **SIMPLE USAGE:**
 
 // var x = new Repeater(id, array);
@@ -9,8 +10,7 @@
 // where id is any DOM id, a container
 // array is any array of objects, a data-source
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+---
 **EXTENDED USAGE:**
 
 // render() method can accept an optional input function (optionalReplaceFunction) as a parameter,
