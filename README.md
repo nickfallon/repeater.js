@@ -9,10 +9,6 @@ If you want to do something more complex (other than just replace found fields),
 
 If you want multiple Repeaters on a page, create a new instance for each one, so that each instance can encapsulate the template HTML and re-render it if the data-source changes. It does not listen for data changes, so if the data source changes, you need to call render() to refresh the HTML.
 
-This code is simple but runs quickly - approximately 4 times faster than Angular **ng-repeat**.
-
-Contact the author: nick.fallon@centralfax.co.uk
-
 ---
 **SIMPLE USAGE:**
 
