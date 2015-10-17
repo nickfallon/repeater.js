@@ -27,13 +27,14 @@ Repeater.prototype.render = function (optionalReplaceFunction) {
         f = Repeater.defaultReplace;
     }
     var r = this.root;
+    var template;
     var frag = document.createDocumentFragment();
     //grab the template if first time
     if (!this.template) {
         this.template = r.cloneNode(true);
     }
     //wipe all contents 
-    var template = this.template;
+    template = this.template;
     while (r.firstChild) {
         r.removeChild(r.firstChild);
     }
