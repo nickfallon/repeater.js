@@ -33,8 +33,8 @@ Repeater.prototype.render = function (optionalReplaceFunction) {
     if (!this.template) {
         this.template = r.cloneNode(true);
     }
-    //wipe all contents 
     template = this.template;
+    //wipe all contents 
     while (r.firstChild) {
         r.removeChild(r.firstChild);
     }
