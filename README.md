@@ -5,9 +5,9 @@
 A fast, lightweight pure javascript Repeater. You supply a container DIV Id containing your template HTML, and an array of objects.
 The Repeater will repeat the template HTML within the container for each object in the array and replace any {fields} surrounded by curly braces with the data found in the current object, if it can match the field name with a property.
 
-If you want to do something more complex (other than just replace found fields), you can optionally pass a function as an argument to the render method (see below in Extended Usage), which means you can perform your own logic for each item rendered. 
+To do something more complex (other than just replace found fields), you can optionally pass a function as an argument to the render method (see below in Extended Usage), which means you can perform your own logic for each item rendered. 
 
-If you want multiple Repeaters on a page, create a new instance for each one, so that each instance can encapsulate the template HTML and re-render it if the data-source changes. It does not listen for data changes, so if the data source changes, you need to call render() to refresh the HTML.
+To show multiple Repeaters on a page, create a new instance for each one, so that each instance can encapsulate the template HTML and re-render it if the data-source changes. It does not listen for data changes, so if the data source changes, you need to call render() to refresh the HTML.
 
 ---
 **SIMPLE USAGE:**
