@@ -19,7 +19,7 @@ function Repeater(id, jsonarray) {
 }
 
 //if optionalReplaceFunction is not supplied, the default behaviour is used,
-//eg. angular-style property replacement of {placeholders}.
+//ie. replacement of {placeholders} in the HTML.
 
 Repeater.prototype.render = function (optionalReplaceFunction) {        
     var f = null || optionalReplaceFunction;
