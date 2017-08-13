@@ -68,3 +68,13 @@ Repeater.defaultReplace = function (html, record) {
     return html;
 }
 
+//stringify properties before rendering
+//to use: r.render(Repeater.stringify);
+Repeater.stringify = function (html, record) {
+    for (prop in record) {
+        html = html.replace("{" + prop + "}", JSON.stringify(record[prop]));
+    }
+    return html;
+}
+
+
