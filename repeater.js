@@ -1,31 +1,76 @@
-//repeater.js
 
-//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// lightweight superfast repeater
+// supports recursed property names eg. {grandparent.parent.propertyname}
+// supports recursed array collections
+// nick fallon 2020
 
-//Quick Use:
+// example:
+// <div id="repeater1">
+//     <div>{foo}</div>
+//     <div>{bar.what}</div>
+//     <div id="alpha.{index}">
+//         {alpha.beta}
+//     </div>
+// </div>
 
-//var x = new Repeater("your_container_id", some_array_of_objects);
-//x.render();
+// var array1 = [
+//     { foo: 'test1',  bar: { what: 1 }, alpha: [ {beta: 1}, {beta: 2}, {beta: 3} ] },
+//     { foo: 'test2',  bar: { what: 2 }, alpha: [ {beta: 4}, {beta: 5}, {beta: 6} ] },
+//     { foo: 'test3',  bar: { what: 3 }, alpha: [ {beta: 7}, {beta: 8}, {beta: 9} ] }
+// ];
+
+// let repeater1 = new Repeater("repeater1");
+// let rules = [];
+// repeater1.render(rules, array1);
+
+// you can override default field replace operations with a rules array like this:
+// let rules = [
+//     (property, value) => {
+//         if (property != "some_property_name") return value;
+//         if (value == 'some_property_value') return "alternative value";
+//         return "";
+//     }
+// ];
 
 
-//id = any DOM id acting as a container
-//jsonarray = any object array
-function Repeater(id, jsonarray) {
+// render an array into an HTML template.
+// jsonarray = any object array
+// id = any DOM id acting as a container.
+
+// fields are property names in brackets like this: {propertyname}.
+// to access sub-objects chain names like this: {grandparent.parent.propertyname}.
+
+// repeaters can be nested if the jsonarray contains a child array at any level.
+// nested repeaters should have an id="childarrayname.{index}"
+
+
+function Repeater(id) {
+    this.id = id;
     this.root = document.getElementById(id);
-    this.jsonarray = jsonarray;
+    this.jsonarray = [];
     this.template = null;
+    this.children = [];
+    // nested arrays need the array name as a prefix so that
+    // non-unique property names work correctly
+    this.prefix = '';
+    if (id.indexOf('.')) {
+        this.prefix = id.split('.')[0] + '.';
+    }
 }
 
-//if optionalReplaceFunction is not supplied, the default behaviour is used,
-//ie. replacement of {placeholders} in the HTML.
+Repeater.prototype.render = function (rules, jsonarray) {
 
-Repeater.prototype.render = function (optionalReplaceFunction) {        
-    var f = null || optionalReplaceFunction;
-    if (!f) {
-        f = Repeater.defaultReplace;
+    this.children = [];
+
+    if (!this.root) {
+        console.log('INFO: repeater render exiting - no id ' + this.id);
+        return;
     }
+
+    let t0 = window.performance.now();
+
+    this.jsonarray = jsonarray;
+    var f = Repeater.recurse;
     var r = this.root;
     var template;
     var frag = document.createDocumentFragment();
@@ -34,7 +79,7 @@ Repeater.prototype.render = function (optionalReplaceFunction) {
         this.template = r.cloneNode(true);
     }
     template = this.template;
-    //wipe all contents 
+    //wipe all contents
     while (r.firstChild) {
         r.removeChild(r.firstChild);
     }
@@ -45,36 +90,80 @@ Repeater.prototype.render = function (optionalReplaceFunction) {
         var clone = template.cloneNode(true);
         var html = clone.innerHTML;
         var record = this.jsonarray[i];
-        //execute replace function (user can override)
-        html = f(html, record);
+
+        //remove prefix (if exists)
+        html = html.split(this.prefix).join('');
+
+        //recurse field replacements
+        html = f(html, record, '', rules, i, this);
+
         clone.innerHTML = html;
-        //attach the clone to the frag
+        //attach the clone to the fragment
         var children = clone.childNodes;
         var j = children.length;
         while (j--) {
             frag.appendChild(children[0]);
         }
     }
-    //attach frag to DOM
+    //attach fragment to DOM
     r.appendChild(frag);
+
+    // recurse arrays
+    var childrens = this.children.length;
+    for (var j = 0; j < childrens; j++) {
+        var c = this.children[j];
+        var r = new Repeater(c.id);
+        r.render(rules, c.jsonarray);
+    }
+
+    let t1 = window.performance.now();
+    if (this.id.indexOf('.') < 0) {
+        // console.log(`${this.id} rendered in ${t1 - t0} milliseconds.`);
+    }
+
 }
 
-//default replace function used by the repeater.
-//to override this behaviour, pass a function to render().
-Repeater.defaultReplace = function (html, record) {
+//evaluate deep property paths.
+Repeater.recurse = function (html, record, propx, rules, ordinal, repeater) {
+
+    // sub-arrays will be rendered in a second pass after this render operation is complete
+    if (Array.isArray(record)) {
+        let sa = { id: propx + ordinal, jsonarray: record };
+        repeater.children.push(sa);
+    }
+
     for (prop in record) {
-        html = html.replace("{" + prop + "}", record[prop]);
+
+        //prop '0' causes a stack overflow, but it is a legitimate value when iterating arrays
+        if ((Array.isArray(record) == false) && (prop == '0')) {
+            break;
+        }
+
+        // transform record[prop] value according to rules
+        // propx is optional for rules!
+        var value = record[prop];
+        rules.forEach(rulef => {
+            value = rulef(prop, value, propx);
+        });
+
+        // HTML transforms property names to lowercase so we do the same
+        // to make sure they are replaced correctly
+        var proppath = (propx + prop).toLowerCase();
+        html = html.split("{" + proppath + "}").join(value);
+
+        // convert references of index to ordinal
+        html = html.split("{index}").join(ordinal);
+        html = html.split("{index1}").join(ordinal + 1);
+
+        // recurse property path
+        if ((prop == 'location') || (prop == 'ownerDocument')) {
+            // ignore this prop - self-referencing items cause overflow
+        }
+        else {
+            // recurse properties eg. {parent.property}
+            html = Repeater.recurse(html, record[prop], proppath + '.', rules, ordinal, repeater);
+        }
     }
     return html;
 }
-
-//stringify properties before rendering
-//to use: r.render(Repeater.stringify);
-Repeater.stringify = function (html, record) {
-    for (prop in record) {
-        html = html.replace("{" + prop + "}", JSON.stringify(record[prop]));
-    }
-    return html;
-}
-
 
