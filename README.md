@@ -5,41 +5,50 @@
 A fast, lightweight pure javascript Repeater. You supply a container DIV ID containing your template HTML, and an array of objects.
 The Repeater will repeat all HTML within the container for each object in the array and replace any {fields} surrounded by curly braces with the data found in the current object, if it can match the field name with a property.
 
+Supports recursed property names eg. {grandparent.parent.propertyname}.
+Supports recursed array collections.
 
-
----
-**EXAMPLE CODE:**
+Example:
 
 ```
+ <div id="repeater1">
+     <div>{foo}</div>
+     <div>{bar.what}</div>
+     <div id="alpha.{index}">
+         {alpha.beta}
+     </div>
+ </div>
 
-<script src="repeater.js"></script>
+ var array1 = [
+     { foo: 'test1',  bar: { what: 1 }, alpha: [ {beta: 1}, {beta: 2}, {beta: 3} ] },
+     { foo: 'test2',  bar: { what: 2 }, alpha: [ {beta: 4}, {beta: 5}, {beta: 6} ] },
+     { foo: 'test3',  bar: { what: 3 }, alpha: [ {beta: 7}, {beta: 8}, {beta: 9} ] }
+ ];
 
-<div id="container">
-    <div class="listitem">
-        <a href="{url}">{title}</a>
-    </div>       
-</div>
-
-<script>
-        var data = [
-            { "title": "History page", "url": "/history.html" },
-            { "title": "Science page", "url": "/science.html" }
-        ];
-            
-        var x = new Repeater("container", data);
-        x.render();
-</script>
+ let repeater1 = new Repeater("repeater1");
+ let rules = [];
+ repeater1.render(rules, array1);
 ```
 
-**EXAMPLE OUTPUT:**
+
+You can override default field replace operations with a rules array like this:
+
 ```
-<div id="container">
-    <div class="listitem">
-        <a href="/history.html">History page</a>
-    </div>       
-    <div class="listitem">
-        <a href="/science.html">Science page</a>
-    </div>       
-</div>
+ let rules = [
+     (property, value) => {
+         if (property != "some_property_name") return value;
+         if (value == 'some_property_value') return "alternative value";
+         return "";
+     }
+ ];
 ```
+
+
+Fields are property names in brackets like this: {propertyname}.
+To access sub-objects chain names like this: {grandparent.parent.propertyname}.
+
+Repeaters can be nested if the jsonarray contains a child array at any level.
+Nested repeaters should have an id="childarrayname.{index}"
+
+
 
